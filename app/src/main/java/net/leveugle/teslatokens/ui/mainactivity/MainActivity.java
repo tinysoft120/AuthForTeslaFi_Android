@@ -1,4 +1,4 @@
-package net.leveugle.teslatokens.p008ui.mainactivity;
+package net.leveugle.teslatokens.ui.mainactivity;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
@@ -29,7 +29,7 @@ import net.leveugle.teslatokens.data.Result;
 import net.leveugle.teslatokens.data.login.LoginDataSource;
 import net.leveugle.teslatokens.data.login.LoginResponseListener;
 import net.leveugle.teslatokens.data.login.Session;
-import net.leveugle.teslatokens.p008ui.login.LoginActivity;
+import net.leveugle.teslatokens.ui.login.LoginActivity;
 import net.leveugle.teslatokens.utils.MyLog;
 
 public class MainActivity extends AppCompatActivity {

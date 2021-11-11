@@ -11,7 +11,7 @@ public class TaskRunner {
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     public interface Callback<R> {
-        void onComplete(R r);
+        void onComplete(R result);
 
         void onError(Exception exc);
     }
@@ -19,8 +19,8 @@ public class TaskRunner {
     public <R> void executeAsync(final Callable<R> callable, final Callback<R> callback) {
         this.executor.execute(() -> {
             try {
-                final R call = callable.call();
-                handler.post(() -> callback.onComplete(call));
+                final R result = callable.call();
+                handler.post(() -> callback.onComplete(result));
             } catch (Exception e) {
                 MyLog.e("TaskRunner", "Exception", e);
                 handler.post(() -> callback.onError(e));

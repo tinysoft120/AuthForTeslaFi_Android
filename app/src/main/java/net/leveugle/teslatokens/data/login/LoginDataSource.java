@@ -88,8 +88,8 @@ public class LoginDataSource {
                 new TaskRunner().executeAsync(() -> teslaLoginLogic.obtainOwnerAPITokenFromSSOToken(newSession), new TaskRunner.Callback<Session>() {
 
                     @Override
-                    public void onComplete(Session session1) {
-                        Session buildSessionFrom = teslaLoginLogic.buildSessionFrom(session1, session1);
+                    public void onComplete(Session result) {
+                        Session buildSessionFrom = teslaLoginLogic.buildSessionFrom(result, result);
                         setLoggedInUser(buildSessionFrom);
                         MyLog.i("LoginDataSource", "refresh OK");
                         loginResponseListener.onResponse(new Result.Success<>(buildSessionFrom));

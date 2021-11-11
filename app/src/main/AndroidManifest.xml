@@ -15,11 +15,11 @@
         android:theme="@style/Theme.AuthForTeslaFi">
 
         <activity android:label="@string/app_name"
-            android:name="net.leveugle.teslatokens.p008ui.login.LoginActivity"/>
+            android:name="net.leveugle.teslatokens.ui.login.LoginActivity"/>
         <activity android:label="@string/app_name"
-            android:name="net.leveugle.teslatokens.p008ui.login.LoginViewActivity"/>
+            android:name="net.leveugle.teslatokens.ui.login.LoginViewActivity"/>
         <activity android:label="@string/app_name"
-            android:name="net.leveugle.teslatokens.p008ui.mainactivity.MainActivity"
+            android:name="net.leveugle.teslatokens.ui.mainactivity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

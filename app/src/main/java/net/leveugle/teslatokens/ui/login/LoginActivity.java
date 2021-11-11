@@ -1,16 +1,15 @@
-package net.leveugle.teslatokens.p008ui.login;
+package net.leveugle.teslatokens.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import net.leveugle.teslatokens.R;
-import net.leveugle.teslatokens.p008ui.mainactivity.MainActivity;
+import net.leveugle.teslatokens.ui.mainactivity.MainActivity;
 import net.leveugle.teslatokens.utils.MyLog;
 
 public class LoginActivity extends AppCompatActivity {

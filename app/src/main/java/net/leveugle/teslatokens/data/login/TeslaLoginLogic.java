@@ -1,5 +1,7 @@
 package net.leveugle.teslatokens.data.login;
 
+import android.os.Build;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -48,16 +50,23 @@ public class TeslaLoginLogic {
     }
 
     private static String randomString() {
+        String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < 86; i++) {
-            sb.append("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".charAt(random.nextInt(62)));
+            sb.append(letters.charAt(random.nextInt(letters.length())));
         }
         return sb.toString();
     }
 
     private static String encodeBase64(String str) {
-        return Base64.getEncoder().encodeToString(str.getBytes())
+        String encoded;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            encoded = Base64.getEncoder().encodeToString(str.getBytes());
+        } else {
+            encoded = android.util.Base64.encodeToString(str.getBytes(), android.util.Base64.DEFAULT);
+        }
+        return encoded
                 .replace("+", "-")
                 .replace("/", "_")
                 .replace("=", "")
@@ -106,15 +115,15 @@ public class TeslaLoginLogic {
                 .addPathSegment("token")
                 .build();
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("grant_type", "authorization_code");
-        jsonObject.addProperty("client_id", LOGIN_CLIENT_ID);
-        jsonObject.addProperty("code_verifier", verifier);
-        jsonObject.addProperty("code", code);
-        jsonObject.addProperty("redirect_uri", LOGIN_REDIRECT_URI);
+        JsonObject parameters = new JsonObject();
+        parameters.addProperty("grant_type", "authorization_code");
+        parameters.addProperty("client_id", LOGIN_CLIENT_ID);
+        parameters.addProperty("code_verifier", verifier);
+        parameters.addProperty("code", code);
+        parameters.addProperty("redirect_uri", LOGIN_REDIRECT_URI);
         Request request = new Request.Builder()
                 .url(build)
-                .post(RequestBody.create(gson.toJson(jsonObject), JsonMediaType))
+                .post(RequestBody.create(gson.toJson(parameters), JsonMediaType))
                 .build();
 
         try (Response execute = okHttpClient.newCall(request).execute();
@@ -131,20 +140,25 @@ public class TeslaLoginLogic {
         }
     }
 
-    public Session login(String str) throws IOException {
-        Session obtainSSOToken = obtainSSOToken(str);
+    public Session login(String code) throws IOException {
+        Session obtainSSOToken = obtainSSOToken(code);
         return buildSessionFrom(obtainSSOToken, obtainOwnerAPITokenFromSSOToken(obtainSSOToken));
     }
 
     public Session obtainOwnerAPITokenFromSSOToken(Session session) throws IOException {
-        HttpUrl build = new HttpUrl.Builder().scheme("https").host("owner-api.teslamotors.com").addPathSegment("oauth").addPathSegment("token").build();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer");
-        jsonObject.addProperty("client_id", CLIENT_ID);
+        HttpUrl build = new HttpUrl.Builder()
+                .scheme("https")
+                .host("owner-api.teslamotors.com")
+                .addPathSegment("oauth")
+                .addPathSegment("token")
+                .build();
+        JsonObject parameters = new JsonObject();
+        parameters.addProperty("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer");
+        parameters.addProperty("client_id", CLIENT_ID);
         Request request = new Request.Builder()
                 .url(build)
                 .addHeader("Authorization", "Bearer " + session.accessToken)
-                .post(RequestBody.create(gson.toJson(jsonObject), JsonMediaType))
+                .post(RequestBody.create(gson.toJson(parameters), JsonMediaType))
                 .build();
         try (Response execute = okHttpClient.newCall(request).execute();
              ResponseBody body = execute.body()) {

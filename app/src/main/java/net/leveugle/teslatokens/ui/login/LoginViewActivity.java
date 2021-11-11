@@ -1,4 +1,4 @@
-package net.leveugle.teslatokens.p008ui.login;
+package net.leveugle.teslatokens.ui.login;
 
 import android.os.Bundle;
 import android.view.View;
@@ -31,18 +31,18 @@ public class LoginViewActivity extends AppCompatActivity {
         webView.loadUrl(logic.getAuthorizeHttpUrl());
     }
 
-    private void doLogin(final String str) {
+    private void doLogin(final String code) {
         findViewById(R.id.login_loading).setVisibility(View.VISIBLE);
         findViewById(R.id.login_webview).setVisibility(View.INVISIBLE);
         new TaskRunner().executeAsync(() -> {
-            Session login = logic.login(str);
+            Session login = logic.login(code);
             loginDataSource.setLoggedInUser(login);
             return login;
         }, new TaskRunner.Callback<Session>() {
 
             @Override
-            public void onComplete(Session session) {
-                if (session == null) {
+            public void onComplete(Session result) {
+                if (result == null) {
                     setResult(RESULT_CANCELED);
                     finish();
                     return;
