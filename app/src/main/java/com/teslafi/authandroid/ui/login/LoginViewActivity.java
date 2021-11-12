@@ -1,4 +1,4 @@
-package net.leveugle.teslatokens.ui.login;
+package com.teslafi.authandroid.ui.login;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,12 +8,12 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import net.leveugle.teslatokens.R;
-import net.leveugle.teslatokens.data.login.LoginDataSource;
-import net.leveugle.teslatokens.data.login.Session;
-import net.leveugle.teslatokens.data.login.TeslaLoginLogic;
-import net.leveugle.teslatokens.utils.MyLog;
-import net.leveugle.teslatokens.utils.TaskRunner;
+import com.teslafi.authandroid.R;
+import com.teslafi.authandroid.data.login.LoginDataSource;
+import com.teslafi.authandroid.data.login.Session;
+import com.teslafi.authandroid.data.login.TeslaLoginLogic;
+import com.teslafi.authandroid.utils.MyLog;
+import com.teslafi.authandroid.utils.TaskRunner;
 
 public class LoginViewActivity extends AppCompatActivity {
     private TeslaLoginLogic logic;

@@ -1,11 +1,11 @@
-package net.leveugle.teslatokens.utils;
+package com.teslafi.authandroid.utils;
 
 import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class MyLog {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
+    //private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
 
     public static int e(String tag, String msg) {
         //String logMsg = DATE_FORMAT.format(new Date()) + " E/" + tag + ": " + msg;

@@ -15,5 +15,5 @@
     <string name="main_refresh_too_early">You token has been emitted less than 1 day ago, refresh is not needed for now</string>
     <string name="refresh_explanation">When the Owner API token expires, you can renew it using the button above. A new token will then be generated and you can replace the old one in your third-party applications.</string>
     <string name="succeed">Login succeed</string>
-    <string name="version">Tesla Tokens %1$s</string>
+    <string name="version">TeslaFi %1$s</string>
 </resources>

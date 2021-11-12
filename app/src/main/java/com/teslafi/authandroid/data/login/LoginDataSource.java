@@ -1,18 +1,16 @@
-package net.leveugle.teslatokens.data.login;
+package com.teslafi.authandroid.data.login;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.Callable;
-import net.leveugle.teslatokens.data.Result;
-import net.leveugle.teslatokens.utils.MyLog;
-import net.leveugle.teslatokens.utils.TaskRunner;
+
+import com.teslafi.authandroid.data.Result;
+import com.teslafi.authandroid.utils.MyLog;
+import com.teslafi.authandroid.utils.TaskRunner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +30,7 @@ public class LoginDataSource {
 
     private LoginDataSource(Context context) {
         queue = Volley.newRequestQueue(context);
-        SharedPreferences shared = context.getSharedPreferences("net.leveugle.teslatokens.LoginDataSource", 0);
+        SharedPreferences shared = context.getSharedPreferences("com.teslafi.authandroid.LoginDataSource", 0);
         sharedPref = shared;
         String string = shared.getString(keySession, null);
         if (string != null) {
@@ -64,7 +62,7 @@ public class LoginDataSource {
         SharedPreferences.Editor edit = sharedPref.edit();
         edit.remove(keySession);
         edit.commit();
-        session = null;
+        this.session = null;
     }
 
     public void refreshSession(final LoginResponseListener loginResponseListener) {
@@ -72,9 +70,9 @@ public class LoginDataSource {
         Session session = this.session;
         if (session == null
                 || session.refreshToken == null
-                || this.session.issuer == null
-                || "".equals(this.session.refreshToken)
-                || "".equals(this.session.issuer)) {
+                || session.issuer == null
+                || "".equals(session.refreshToken)
+                || "".equals(session.issuer)) {
             MyLog.d("LoginDataSource", "refreshSession end Cannot refresh session");
             loginResponseListener.onError(new Result.Error("Cannot refresh session"));
             return;
@@ -83,7 +81,7 @@ public class LoginDataSource {
             MyLog.d("LoginDataSource", "session refreshed");
             try {
                 final Session newSession = new Session(new JSONObject(response));
-                newSession.issuer = session.issuer;
+                newSession.issuer = this.session.issuer;
                 final TeslaLoginLogic teslaLoginLogic = new TeslaLoginLogic();
                 new TaskRunner().executeAsync(() -> teslaLoginLogic.obtainOwnerAPITokenFromSSOToken(newSession), new TaskRunner.Callback<Session>() {
 
@@ -98,20 +96,20 @@ public class LoginDataSource {
                     @Override
                     public void onError(Exception exc) {
                         MyLog.e("LoginDataSource", "error on refresh call", exc);
-                        setLoggedInUser(session);
+                        setLoggedInUser(LoginDataSource.this.session);
                     }
                 });
             } catch (JSONException e) {
                 MyLog.e("LoginDataSource", "error while refreshing onResponse", e);
-                if (session != null) {
-                    setLoggedInUser(session);
+                if (this.session != null) {
+                    setLoggedInUser(this.session);
                 }
                 loginResponseListener.onError(new Result.Error(e));
             }
         }, error -> {
             MyLog.e("LoginDataSource", "session refresh error", error);
-            if (session != null) {
-                setLoggedInUser(session);
+            if (this.session != null) {
+                setLoggedInUser(this.session);
             }
             if (error != null) {
                 if (error.networkResponse != null) {
@@ -138,7 +136,7 @@ public class LoginDataSource {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                return ("client_id=ownerapi&scope=openid email offline_access&grant_type=refresh_token&refresh_token=" + session.refreshToken).getBytes();
+                return ("client_id=ownerapi&scope=openid email offline_access&grant_type=refresh_token&refresh_token=" + LoginDataSource.this.session.refreshToken).getBytes();
             }
         });
     }

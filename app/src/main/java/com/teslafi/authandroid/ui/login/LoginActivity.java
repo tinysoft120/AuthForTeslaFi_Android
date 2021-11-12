@@ -1,4 +1,4 @@
-package net.leveugle.teslatokens.ui.login;
+package com.teslafi.authandroid.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +8,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import net.leveugle.teslatokens.R;
-import net.leveugle.teslatokens.ui.mainactivity.MainActivity;
-import net.leveugle.teslatokens.utils.MyLog;
+import com.teslafi.authandroid.R;
+import com.teslafi.authandroid.ui.mainactivity.MainActivity;
+import com.teslafi.authandroid.utils.MyLog;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";

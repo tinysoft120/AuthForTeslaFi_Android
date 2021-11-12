@@ -1,7 +1,7 @@
-package net.leveugle.teslatokens.data.login;
+package com.teslafi.authandroid.data.login;
 
 import com.google.gson.JsonObject;
-import net.leveugle.teslatokens.utils.MyLog;
+import com.teslafi.authandroid.utils.MyLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 

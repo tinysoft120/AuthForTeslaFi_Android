@@ -1,4 +1,4 @@
-package net.leveugle.teslatokens.data;
+package com.teslafi.authandroid.data;
 
 public class Result<T> {
     private Result() {

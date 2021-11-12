@@ -1,4 +1,4 @@
-package net.leveugle.teslatokens.utils;
+package com.teslafi.authandroid.utils;
 
 import android.os.Handler;
 import android.os.Looper;

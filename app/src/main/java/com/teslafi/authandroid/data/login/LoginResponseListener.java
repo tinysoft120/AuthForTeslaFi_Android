@@ -1,6 +1,6 @@
-package net.leveugle.teslatokens.data.login;
+package com.teslafi.authandroid.data.login;
 
-import net.leveugle.teslatokens.data.Result;
+import com.teslafi.authandroid.data.Result;
 
 public interface LoginResponseListener {
     void onError(Result.Error error);

@@ -1,4 +1,4 @@
-package net.leveugle.teslatokens.data.login;
+package com.teslafi.authandroid.data.login;
 
 import android.os.Build;
 

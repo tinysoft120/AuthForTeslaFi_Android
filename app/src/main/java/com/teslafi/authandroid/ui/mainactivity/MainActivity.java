@@ -1,4 +1,4 @@
-package net.leveugle.teslatokens.ui.mainactivity;
+package com.teslafi.authandroid.ui.mainactivity;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
@@ -23,17 +23,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.Date;
 import java.util.Locale;
-import net.leveugle.teslatokens.BuildConfig;
-import net.leveugle.teslatokens.R;
-import net.leveugle.teslatokens.data.Result;
-import net.leveugle.teslatokens.data.login.LoginDataSource;
-import net.leveugle.teslatokens.data.login.LoginResponseListener;
-import net.leveugle.teslatokens.data.login.Session;
-import net.leveugle.teslatokens.ui.login.LoginActivity;
-import net.leveugle.teslatokens.utils.MyLog;
+import com.teslafi.authandroid.BuildConfig;
+import com.teslafi.authandroid.R;
+import com.teslafi.authandroid.data.Result;
+import com.teslafi.authandroid.data.login.LoginDataSource;
+import com.teslafi.authandroid.data.login.LoginResponseListener;
+import com.teslafi.authandroid.data.login.Session;
+import com.teslafi.authandroid.ui.login.LoginActivity;
+import com.teslafi.authandroid.utils.MyLog;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int MINIMUM_DELAY_BEFORE_REFRESH_SECONDS = 0;
     private static final String TAG = "MainActivity";
     private ProgressBar loadingProgressBar;
     private LoginDataSource loginDataSource;
@@ -46,15 +45,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         refreshButton = findViewById(R.id.main_refresh_button);
         refreshButton.setOnClickListener(view -> {
-            MyLog.d(MainActivity.TAG, "refreshButton onClick");
+            MyLog.d(TAG, "refreshButton onClick");
             if (new Date().getTime() / 1000 < ((long) (loginDataSource.getSession().createdAt))) {
-                MyLog.d(MainActivity.TAG, "refreshButton onClick too early");
-                Toast.makeText(MainActivity.this, R.string.main_refresh_too_early, Toast.LENGTH_LONG).show();
+                MyLog.d(TAG, "refreshButton onClick too early");
+                Toast.makeText(this, R.string.main_refresh_too_early, Toast.LENGTH_LONG).show();
             }
         });
         refreshButton.setEnabled(false);
         loginDataSource = LoginDataSource.getInstance(this);
-        findViewById(R.id.main_purchase_button).setOnClickListener(view -> MyLog.d(MainActivity.TAG, "purchaseButton onClick"));
+        findViewById(R.id.main_purchase_button).setOnClickListener(view -> MyLog.d(TAG, "purchaseButton onClick"));
         loadingProgressBar = findViewById(R.id.loading);
         ((TextView) findViewById(R.id.version)).setText(getString(R.string.version, BuildConfig.VERSION_NAME));
     }
@@ -115,18 +114,18 @@ public class MainActivity extends AppCompatActivity {
         editText.setText(str);
         editText.setInputType(0);
         editText.setOnTouchListener((view, motionEvent) -> {
-            MyLog.d(MainActivity.TAG, "onTouch");
+            MyLog.d(TAG, "onTouch");
             if (motionEvent.getAction() == 1) {
                 if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 0) {
                     if (motionEvent.getRawX() >= ((float) (editText.getRight() - editText.getCompoundDrawables()[2].getBounds().width()))) {
                         ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE))
-                                .setPrimaryClip(ClipData.newPlainText("net.leveugle.teslatokens.tokens", str));
+                                .setPrimaryClip(ClipData.newPlainText("com.teslafi.authandroid.tokens", str));
                         Toast.makeText(getApplicationContext(), "Copied into clipboard", Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 } else if (motionEvent.getRawX() <= ((float) (editText.getLeft() + editText.getCompoundDrawables()[0].getBounds().width()))) {
                     ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE))
-                            .setPrimaryClip(ClipData.newPlainText("net.leveugle.teslatokens.tokens", str));
+                            .setPrimaryClip(ClipData.newPlainText("com.teslafi.authandroid.tokens", str));
                     Toast.makeText(getApplicationContext(), "Copied into clipboard", Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Result.Error error) {
-                MyLog.e(MainActivity.TAG, "refreshToken onError", error.getError());
+                MyLog.e(TAG, "refreshToken onError", error.getError());
                 Toast.makeText(MainActivity.this, R.string.main_refresh_error, Toast.LENGTH_LONG).show();
                 refreshButton.setEnabled(true);
                 loadingProgressBar.setVisibility(View.INVISIBLE);
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Result.Success<Session> success) {
-                MyLog.d(MainActivity.TAG, "refreshToken onResponse");
+                MyLog.d(TAG, "refreshToken onResponse");
                 populateFields();
                 loadingProgressBar.setVisibility(View.INVISIBLE);
             }
