@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TeslaFi</string>
-    <string name="action_auth_with_tesla">Authenticate With Tesla</string>
+    <string name="action_auth_with_tesla">Authenticate With Tesla.com</string>
+    <string name="action_auth_with_tesla_cn">Authenticate With Tesla.cn</string>
     <string name="login_link_tesla_account">Link you Tesla.com account</string>
     <string name="global">Global</string>
     <string name="china">China</string>

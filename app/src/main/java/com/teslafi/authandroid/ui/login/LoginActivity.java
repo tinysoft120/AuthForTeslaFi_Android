@@ -18,7 +18,6 @@ import com.teslafi.authandroid.utils.MyLog;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private ProgressBar loadingProgressBar;
-    private TokenRegion region = TokenRegion.GLOBAL;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,21 +25,17 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity);
         MyLog.i(TAG, "onCreate");
         loadingProgressBar = findViewById(R.id.loading);
-        findViewById(R.id.login_using_tesla_account).setOnClickListener(view -> {
+        findViewById(R.id.btnLoginTesla).setOnClickListener(view -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
             Intent i = new Intent(LoginActivity.this, LoginViewActivity.class);
-            i.putExtra("region", region.value);
+            i.putExtra("region", TokenRegion.GLOBAL.value);
             startActivityForResult(i, 0);
         });
-
-        MaterialButtonToggleGroup toggleGroup = findViewById(R.id.toggleButton);
-        toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (checkedId == R.id.btnGlobal && isChecked) {
-                region = TokenRegion.GLOBAL;
-            }
-            if (checkedId == R.id.btnChina && isChecked) {
-                region = TokenRegion.CHINA;
-            }
+        findViewById(R.id.btnLoginTeslaCn).setOnClickListener(view -> {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            Intent i = new Intent(LoginActivity.this, LoginViewActivity.class);
+            i.putExtra("region", TokenRegion.CHINA.value);
+            startActivityForResult(i, 0);
         });
     }
 

@@ -90,39 +90,8 @@
         app:layout_constraintStart_toStartOf="@id/guideline_v_left1"
         app:layout_constraintTop_toBottomOf="@id/tv_title">
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/toggleButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:checkedButton="@id/btnGlobal"
-            app:selectionRequired="true"
-            app:singleSelection="true">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGlobal"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/global"
-                android:textAllCaps="false"
-                app:shapeAppearance="@style/Rounded" />
-            <!--style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->
-            <!--style="?attr/materialButtonOutlinedStyle"-->
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnChina"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/china"
-                android:textAllCaps="false"
-                app:shapeAppearance="@style/Rounded" />
-        </com.google.android.material.button.MaterialButtonToggleGroup>
-
         <Button
-            android:id="@+id/login_using_tesla_account"
+            android:id="@+id/btnLoginTesla"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -131,7 +100,22 @@
             android:text="@string/action_auth_with_tesla"
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:drawableEnd="@drawable/globe_icon"/>
+
+        <Button
+            android:id="@+id/btnLoginTeslaCn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="8dp"
+            android:padding="10dp"
+            android:text="@string/action_auth_with_tesla_cn"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textSize="16sp"
+            android:drawableEnd="@drawable/china_icon"/>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <TextView
