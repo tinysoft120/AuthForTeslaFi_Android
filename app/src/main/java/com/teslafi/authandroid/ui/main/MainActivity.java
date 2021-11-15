@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ProgressBar loadingProgressBar;
     private LoginDataSource loginDataSource;
-    private Button btnRefresh;
     private TextView tvRefreshToken;
 
     @Override
@@ -38,22 +37,6 @@ public class MainActivity extends AppCompatActivity {
         loginDataSource = LoginDataSource.getInstance(this);
 
         tvRefreshToken = findViewById(R.id.tv_refresh_token);
-        btnRefresh = findViewById(R.id.main_refresh_button);
-        if (btnRefresh != null) {
-            btnRefresh.setOnClickListener(view -> {
-                MyLog.d(TAG, "refreshButton onClick");
-                if (new Date().getTime() / 1000 < ((long) (loginDataSource.getSession().createdAt))) {
-                    MyLog.d(TAG, "refreshButton onClick too early");
-                    Toast.makeText(this, R.string.main_refresh_too_early, Toast.LENGTH_LONG).show();
-                }
-            });
-            btnRefresh.setEnabled(false);
-        }
-
-        Button btnLogout = findViewById(R.id.main_logout);
-        if (btnLogout != null) {
-            btnLogout.setOnClickListener(view -> logout());
-        }
 
         Button btnLinkAccount = findViewById(R.id.btnLinkExisting);
         btnLinkAccount.setOnClickListener(view -> actionLinkAccount());
@@ -117,33 +100,5 @@ public class MainActivity extends AppCompatActivity {
         ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE))
                 .setPrimaryClip(ClipData.newPlainText("com.teslafi.authandroid.tokens", token));
         Toast.makeText(getApplicationContext(), "Copied into clipboard", Toast.LENGTH_SHORT).show();
-    }
-
-    private void refreshToken() {
-        MyLog.d(TAG, "refreshToken");
-        if ((new Date().getTime() / 1000) < loginDataSource.getSession().createdAt) {
-            MyLog.d(TAG, "refreshToken too early");
-            Toast.makeText(this, R.string.main_refresh_too_early, Toast.LENGTH_LONG).show();
-            return;
-        }
-        if(btnRefresh != null) btnRefresh.setEnabled(false);
-        loadingProgressBar.setVisibility(View.VISIBLE);
-        loginDataSource.refreshSession(new LoginResponseListener() {
-
-            @Override
-            public void onError(Result.Error error) {
-                MyLog.e(TAG, "refreshToken onError", error.getError());
-                Toast.makeText(MainActivity.this, R.string.main_refresh_error, Toast.LENGTH_LONG).show();
-                if(btnRefresh != null) btnRefresh.setEnabled(true);
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onResponse(Result.Success<Session> success) {
-                MyLog.d(TAG, "refreshToken onResponse");
-                updateToken();
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-            }
-        });
     }
 }
