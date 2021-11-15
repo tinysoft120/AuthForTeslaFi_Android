@@ -4,6 +4,8 @@ import android.os.Build;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.teslafi.authandroid.data.TokenRegion;
+
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -23,7 +25,8 @@ import okhttp3.ResponseBody;
 
 public class TeslaLoginLogic {
     static final String CLIENT_ID = "81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384";
-    protected static final String DEFAULT_TESLA_ENV = "auth.tesla.com";
+    protected static final String DEFAULT_TESLA_ENV_GL = "auth.tesla.com";
+    protected static final String DEFAULT_TESLA_ENV_CN = "auth.tesla.cn";
     static final String LOGIN_CLIENT_ID = "ownerapi";
     static final String LOGIN_REDIRECT_URI = "https://auth.tesla.com/void/callback";
     static final String LOGIN_SCOPES = "openid email offline_access";
@@ -31,7 +34,7 @@ public class TeslaLoginLogic {
     private final MediaType JsonMediaType = MediaType.parse("application/json; charset=utf-8");
     private final Gson gson = new Gson();
     private final OkHttpClient okHttpClient;
-    public String teslaEnv = DEFAULT_TESLA_ENV;
+    public String teslaEnv = DEFAULT_TESLA_ENV_GL;
 
     public TeslaLoginLogic() {
         CookieManager cookieManager = new CookieManager();
@@ -73,7 +76,15 @@ public class TeslaLoginLogic {
                 .trim();
     }
 
-    public String getAuthorizeHttpUrl() {
+    public String getAuthorizeHttpUrl(TokenRegion region) {
+        switch (region) {
+            case GLOBAL:
+                teslaEnv = DEFAULT_TESLA_ENV_GL;
+                break;
+            case CHINA:
+                teslaEnv = DEFAULT_TESLA_ENV_CN;
+                break;
+        }
         return new HttpUrl.Builder().scheme("https")
                 .host(teslaEnv)
                 .addPathSegment("oauth2")
@@ -87,21 +98,21 @@ public class TeslaLoginLogic {
                 .build().toString();
     }
 
-    Session buildSessionFrom(Session session, Session session2) {
-        return new Session(session2.accessToken, session.refreshToken, session2.createdAt, session2.expiresIn, session.issuer);
+    Session buildSessionFrom(Session ssoSession, Session ownApiSession) {
+        return new Session(ownApiSession.accessToken, ssoSession.refreshToken, ownApiSession.createdAt, ownApiSession.expiresIn, ssoSession.issuer);
     }
 
     private static void failIfNotSuccessful(Response response) {
         if (!response.isSuccessful()) {
-            throw new RuntimeException("Request not succesful: " + response);
+            throw new RuntimeException("Request not successful: " + response);
         }
     }
 
-    private static void failOnError(JsonObject object) {
-        String asString;
-        JsonObject asJsonObject = object.getAsJsonObject("error");
-        if (asJsonObject != null && (asString = asJsonObject.get("message").getAsString()) != null) {
-            throw new RuntimeException(asString);
+    private static void failOnError(JsonObject response) {
+        String errMsg;
+        JsonObject error = response.getAsJsonObject("error");
+        if (error != null && (errMsg = error.get("message").getAsString()) != null) {
+            throw new RuntimeException(errMsg);
         }
     }
 
@@ -129,9 +140,9 @@ public class TeslaLoginLogic {
         try (Response execute = okHttpClient.newCall(request).execute();
              ResponseBody body = execute.body() ) {
             failIfNotSuccessful(execute);
-            JsonObject jsonObject2 = gson.fromJson(body.string(), JsonObject.class);
-            failOnError(jsonObject2);
-            Session session = new Session(jsonObject2);
+            JsonObject response = gson.fromJson(body.string(), JsonObject.class);
+            failOnError(response);
+            Session session = new Session(response);
             session.issuer = teslaEnv;
             return session;
         } catch (Throwable th) {

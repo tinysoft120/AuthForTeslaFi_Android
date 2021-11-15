@@ -8,9 +8,19 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="colorAccent">#B92E34</color>
+    <color name="colorPrimary">#E61635</color>
+    <color name="colorPrimaryDark">#C00000</color>
+    <color name="colorStatusBar">#FFFFFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="color_accent">#666666</color>
+    <color name="color_background">#DDDDDD</color>
+    <color name="color_background2">#E5E5E5</color>
+    <color name="color_background_gradient_end">#929293</color>
+    <color name="color_background_gradient_start">#E9E8EA</color>
+    <color name="color_global_accent">#000000</color>
+    <color name="color_tesla_red">#E61635</color>
+    <color name="color_blue">#007AFF</color>
+    <color name="color_green">#8BC34A</color>
 
-    <color name="colorAccent">#b92e34</color>
-    <color name="colorPrimary">#c90000</color>
-    <color name="colorPrimaryDark">#c00000</color>
-    <color name="ic_launcher_background">#c90000</color>
 </resources>

@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'kotlin-android'
 }
 
 android {
@@ -11,6 +12,9 @@ android {
         targetSdk 31
         versionCode 3
         versionName "1.0.1"
+
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -25,9 +29,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildFeatures {
-        viewBinding true
-    }
+//    buildFeatures {
+//        viewBinding true
+//    }
 }
 
 dependencies {
@@ -41,6 +45,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.9.2'
     implementation 'com.android.volley:volley:1.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 //    testImplementation 'junit:junit:4.+'
 //    androidTestImplementation 'androidx.test.ext:junit:1.1.2'

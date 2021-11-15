@@ -8,11 +8,14 @@
         <entry key="app/src/main/res/drawable/ic_clock_black_24dp.xml" value="0.3972222222222222" />
         <entry key="app/src/main/res/drawable/ic_keyboard_black_24dp.xml" value="0.3972222222222222" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3972222222222222" />
+        <entry key="app/src/main/res/drawable/rounded_button.xml" value="0.5354166666666667" />
         <entry key="app/src/main/res/drawable/test_custom_background.xml" value="0.3972222222222222" />
         <entry key="app/src/main/res/drawable/test_level_drawable.xml" value="0.3972222222222222" />
-        <entry key="app/src/main/res/layout/login_activity.xml" value="0.5192708333333333" />
+        <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.29375" />
+        <entry key="app/src/main/res/layout/login_activity.xml" value="0.4444444444444444" />
         <entry key="app/src/main/res/layout/login_view.xml" value="0.5192708333333333" />
         <entry key="app/src/main/res/layout/main_activity.xml" value="0.5192708333333333" />
+        <entry key="app/src/main/res/layout/main_web_view.xml" value="0.5192708333333333" />
         <entry key="app/src/main/res/menu/activity_logged_in_menu.xml" value="0.5192708333333333" />
         <entry key="app/src/main/res/menu/example_menu.xml" value="0.5192708333333333" />
         <entry key="app/src/main/res/menu/example_menu2.xml" value="0.5192708333333333" />

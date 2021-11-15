@@ -8,13 +8,17 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.teslafi.authandroid.R;
-import com.teslafi.authandroid.ui.mainactivity.MainActivity;
+import com.teslafi.authandroid.data.TokenRegion;
+import com.teslafi.authandroid.ui.main.MainActivity;
 import com.teslafi.authandroid.utils.MyLog;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private ProgressBar loadingProgressBar;
+    private TokenRegion region = TokenRegion.GLOBAL;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,7 +28,19 @@ public class LoginActivity extends AppCompatActivity {
         loadingProgressBar = findViewById(R.id.loading);
         findViewById(R.id.login_using_tesla_account).setOnClickListener(view -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            startActivityForResult(new Intent(LoginActivity.this, LoginViewActivity.class), 0);
+            Intent i = new Intent(LoginActivity.this, LoginViewActivity.class);
+            i.putExtra("region", region.value);
+            startActivityForResult(i, 0);
+        });
+
+        MaterialButtonToggleGroup toggleGroup = findViewById(R.id.toggleButton);
+        toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (checkedId == R.id.btnGlobal && isChecked) {
+                region = TokenRegion.GLOBAL;
+            }
+            if (checkedId == R.id.btnChina && isChecked) {
+                region = TokenRegion.CHINA;
+            }
         });
     }
 
@@ -36,11 +52,11 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == -1) {
+        if (resultCode == RESULT_OK) {
             showLoginOkAndFinish();
             return;
         }
-        if (resultCode == 0) {
+        if (resultCode == RESULT_CANCELED) {
             loadingProgressBar.setVisibility(View.GONE);
             showLoginFailed(R.string.login_failed);
         }
@@ -58,4 +74,5 @@ public class LoginActivity extends AppCompatActivity {
         loadingProgressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(), num, Toast.LENGTH_LONG).show();
     }
+
 }

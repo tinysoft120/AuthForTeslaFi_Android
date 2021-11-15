@@ -23,9 +23,16 @@
 
 <!--    <style name="Theme.AuthForTeslaFi.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
 
-    <style name="Theme.AuthForTeslaFi" parent="@style/Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="Theme.AuthForTeslaFi" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/colorStatusBar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+    </style>
+
+    <style name="Rounded" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">6dp</item>
     </style>
 </resources>

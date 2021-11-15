@@ -42,6 +42,12 @@ public class LoginDataSource {
         }
     }
 
+    public boolean isValidToken() {
+        return this.session != null
+                && this.session.refreshToken != null
+                && !this.session.refreshToken.isEmpty();
+    }
+
     public Session getSession() {
         return this.session;
     }
