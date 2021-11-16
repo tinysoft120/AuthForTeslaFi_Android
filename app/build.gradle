@@ -10,7 +10,7 @@ android {
         applicationId "com.teslafi.authandroid"
         minSdk 21
         targetSdk 31
-        versionCode 6
+        versionCode 7
         versionName "1.0.1"
 
         renderscriptTargetApi 18

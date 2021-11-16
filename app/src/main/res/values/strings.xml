@@ -2,7 +2,7 @@
     <string name="app_name">TeslaFi</string>
     <string name="action_auth_with_tesla">Authenticate With Tesla.com</string>
     <string name="action_auth_with_tesla_cn">Authenticate With Tesla.cn</string>
-    <string name="login_link_tesla_account">Link you Tesla.com account</string>
+    <string name="login_link_tesla_account">Link your Tesla.com account</string>
     <string name="global">Global</string>
     <string name="china">China</string>
     <string name="login_description">TeslaFi obtains the data from your vehicle from the Tesla API. In order to connect to the API this application connects you directly to Tesla\'s website to authenticate and create an API token which TeslaFi will use to request data instead of your credentials.</string>
