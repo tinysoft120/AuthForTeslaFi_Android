@@ -3,6 +3,7 @@ package com.teslafi.authandroid.data.login;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -83,28 +84,33 @@ public class LoginDataSource {
             loginResponseListener.onError(new Result.Error("Cannot refresh session"));
             return;
         }
-        this.queue.add(new StringRequest(1, "https://" + this.session.issuer + "/oauth2/v3/token", response -> {
+        this.queue.add(new StringRequest(Request.Method.POST, "https://" + this.session.issuer + "/oauth2/v3/token", response -> {
             MyLog.d("LoginDataSource", "session refreshed");
             try {
                 final Session newSession = new Session(new JSONObject(response));
                 newSession.issuer = this.session.issuer;
-                final TeslaLoginLogic teslaLoginLogic = new TeslaLoginLogic();
-                new TaskRunner().executeAsync(() -> teslaLoginLogic.obtainOwnerAPITokenFromSSOToken(newSession), new TaskRunner.Callback<Session>() {
+                if (TeslaLoginLogic.USE_OWNER_API_TOKEN) {
+                    final TeslaLoginLogic teslaLoginLogic = new TeslaLoginLogic();
+                    new TaskRunner().executeAsync(() -> teslaLoginLogic.obtainOwnerAPITokenFromSSOToken(newSession), new TaskRunner.Callback<Session>() {
 
-                    @Override
-                    public void onComplete(Session result) {
-                        Session buildSessionFrom = teslaLoginLogic.buildSessionFrom(result, result);
-                        setLoggedInUser(buildSessionFrom);
-                        MyLog.i("LoginDataSource", "refresh OK");
-                        loginResponseListener.onResponse(new Result.Success<>(buildSessionFrom));
-                    }
+                        @Override
+                        public void onComplete(Session result) {
+                            Session buildSessionFrom = teslaLoginLogic.buildSessionFrom(result, result);
+                            setLoggedInUser(buildSessionFrom);
+                            MyLog.i("LoginDataSource", "refresh OK");
+                            loginResponseListener.onResponse(new Result.Success<>(buildSessionFrom));
+                        }
 
-                    @Override
-                    public void onError(Exception exc) {
-                        MyLog.e("LoginDataSource", "error on refresh call", exc);
-                        setLoggedInUser(LoginDataSource.this.session);
-                    }
-                });
+                        @Override
+                        public void onError(Exception exc) {
+                            MyLog.e("LoginDataSource", "error on refresh call", exc);
+                            setLoggedInUser(LoginDataSource.this.session);
+                        }
+                    });
+                } else {
+                    setLoggedInUser(newSession);
+                    loginResponseListener.onResponse(new Result.Success<>(newSession));
+                }
             } catch (JSONException e) {
                 MyLog.e("LoginDataSource", "error while refreshing onResponse", e);
                 if (this.session != null) {

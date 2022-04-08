@@ -36,6 +36,7 @@ public class LoginViewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_view);
+        TeslaLoginLogic.setUseOwnerApiToken(false);  // disable to obtain owner api token
         loginDataSource = LoginDataSource.getInstance(this);
         logic = new TeslaLoginLogic();
         region = getIntent().getIntExtra("region", 0) == 0 ? TokenRegion.GLOBAL : TokenRegion.CHINA;

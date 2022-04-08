@@ -9,6 +9,8 @@ import com.teslafi.authandroid.data.TokenRegion;
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Random;
@@ -31,6 +33,7 @@ public class TeslaLoginLogic {
     static final String LOGIN_REDIRECT_URI = "https://auth.tesla.com/void/callback";
     static final String LOGIN_SCOPES = "openid email offline_access";
     static final String LOGIN_SSO_VERSION = "v3";
+    static boolean USE_OWNER_API_TOKEN = true;
     private final MediaType JsonMediaType = MediaType.parse("application/json; charset=utf-8");
     private final Gson gson = new Gson();
     private final OkHttpClient okHttpClient;
@@ -48,15 +51,32 @@ public class TeslaLoginLogic {
                 .build();
     }
 
-    private static String generateCodeVerifier() {
-        return encodeBase64(randomString());
+    public static void setUseOwnerApiToken(boolean use) {
+        USE_OWNER_API_TOKEN = use;
     }
 
-    private static String randomString() {
+    private static String generateCodeVerifier(String key) {
+        return encodeBase64(key);  //return encodeBase64();
+    }
+
+    private static String generateCodeChallenge(String verifier) {
+        try {
+            String hash = encodeSha256(verifier);
+            return encodeBase64(hash)
+                    .replace("+", "-")
+                    .replace("/", "_")
+                    .replace("=", "")
+                    .trim();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private static String randomString(int length) {
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
-        for (int i = 0; i < 86; i++) {
+        for (int i = 0; i < length; i++) {
             sb.append(letters.charAt(random.nextInt(letters.length())));
         }
         return sb.toString();
@@ -76,7 +96,21 @@ public class TeslaLoginLogic {
                 .trim();
     }
 
+    private static String encodeSha256(String str) throws NoSuchAlgorithmException {
+        MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+        sha256.update(str.getBytes());
+        byte[] digest = sha256.digest();
+
+        StringBuilder hex = new StringBuilder(digest.length * 2);
+        for (byte b : digest)
+            hex.append(String.format("%02x", b & 0xFF));
+        return hex.toString();
+    }
+
     public String getAuthorizeHttpUrl(TokenRegion region) {
+        String verifier = generateCodeVerifier(CLIENT_ID);  // generateCodeVerifier(randomString())
+        String challenge = generateCodeChallenge(verifier);
+
         switch (region) {
             case GLOBAL:
                 teslaEnv = DEFAULT_TESLA_ENV_GL;
@@ -94,7 +128,9 @@ public class TeslaLoginLogic {
                 .addQueryParameter("redirect_uri", LOGIN_REDIRECT_URI)
                 .addQueryParameter("response_type", "code")
                 .addQueryParameter("scope", LOGIN_SCOPES)
-                .addQueryParameter("state", "TeslaTokens" + randomString())
+                .addQueryParameter("state", "TeslaTokens" + randomString(9))
+                .addQueryParameter("code_challenge_method", "S256")
+                .addQueryParameter("code_challenge", challenge)
                 .build().toString();
     }
 
@@ -117,7 +153,7 @@ public class TeslaLoginLogic {
     }
 
     private Session obtainSSOToken(String code) throws IOException {
-        String verifier = generateCodeVerifier();
+        String verifier = generateCodeVerifier(CLIENT_ID);  // generateCodeVerifier(randomString())
         HttpUrl build = new HttpUrl.Builder()
                 .scheme("https")
                 .host(teslaEnv)
@@ -153,7 +189,11 @@ public class TeslaLoginLogic {
 
     public Session login(String code) throws IOException {
         Session obtainSSOToken = obtainSSOToken(code);
-        return buildSessionFrom(obtainSSOToken, obtainOwnerAPITokenFromSSOToken(obtainSSOToken));
+        if (USE_OWNER_API_TOKEN) {
+            return buildSessionFrom(obtainSSOToken, obtainOwnerAPITokenFromSSOToken(obtainSSOToken));
+        } else {
+            return obtainSSOToken;
+        }
     }
 
     public Session obtainOwnerAPITokenFromSSOToken(Session session) throws IOException {
