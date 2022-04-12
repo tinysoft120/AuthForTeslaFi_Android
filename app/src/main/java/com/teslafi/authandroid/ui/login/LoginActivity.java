@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
             i.putExtra("region", TokenRegion.GLOBAL.value);
             startActivityForResult(i, 0);
         });
+        findViewById(R.id.btnLoginTeslaCn).setVisibility(View.INVISIBLE);
         findViewById(R.id.btnLoginTeslaCn).setOnClickListener(view -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
             Intent i = new Intent(LoginActivity.this, LoginViewActivity.class);

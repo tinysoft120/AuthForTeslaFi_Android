@@ -114,7 +114,9 @@
             android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="16sp"
-            android:drawableEnd="@drawable/china_icon"/>
+            android:visibility="invisible"
+            android:drawableEnd="@drawable/china_icon"
+            tools:visibility="visible"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
